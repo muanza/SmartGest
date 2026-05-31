@@ -103,3 +103,7 @@ INSERT INTO idiomas (codigo, nome) VALUES
 ('fr', 'Français'),
 ('zh', '中文')
 ON CONFLICT (codigo) DO NOTHING;
+
+INSERT INTO categorias (nome) VALUES
+('Geral')
+ON CONFLICT DO NOTHING;

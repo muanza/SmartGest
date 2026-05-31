@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Utilizadores - SmartGest</title>
+</h:head>
+<h:body>
+<h1>Gestão de Utilizadores</h1>
+<h:link outcome="/index.xhtml" value="Voltar ao início"/>
+<h:messages globalOnly="true"/>
+
+<h:form>
+    <h3>Cadastro</h3>
+    <h:panelGrid columns="2">
+        <h:outputLabel for="empresa" value="Empresa"/>
+        <h:selectOneMenu id="empresa" value="#{utilizadorBean.empresaNif}">
+            <f:selectItems value="#{utilizadorBean.empresas}" var="empresa"
+                           itemValue="#{empresa.nif}" itemLabel="#{empresa.nome}"/>
+        </h:selectOneMenu>
+
+        <h:outputLabel for="nome" value="Nome"/>
+        <h:inputText id="nome" value="#{utilizadorBean.utilizador.nome}" required="true"/>
+
+        <h:outputLabel for="email" value="Email"/>
+        <h:inputText id="email" value="#{utilizadorBean.utilizador.email}" required="true"/>
+
+        <h:outputLabel for="senha" value="Senha Hash"/>
+        <h:inputSecret id="senha" value="#{utilizadorBean.utilizador.senhaHash}" redisplay="true" required="true"/>
+
+        <h:outputLabel for="perfil" value="Perfil"/>
+        <h:selectOneMenu id="perfil" value="#{utilizadorBean.utilizador.perfil}">
+            <f:selectItems value="#{utilizadorBean.perfis}"/>
+        </h:selectOneMenu>
+
+        <h:outputLabel for="ativo" value="Ativo"/>
+        <h:selectBooleanCheckbox id="ativo" value="#{utilizadorBean.utilizador.ativo}"/>
+    </h:panelGrid>
+
+    <h:commandButton value="Novo" action="#{utilizadorBean.prepareNew}"/>
+    <h:commandButton value="Guardar" action="#{utilizadorBean.save}"/>
+</h:form>
+
+<h:form>
+    <h3>Registos</h3>
+    <h:dataTable value="#{utilizadorBean.utilizadores}" var="item" border="1">
+        <h:column>
+            <f:facet name="header">Nome</f:facet>
+            #{item.nome}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Email</f:facet>
+            #{item.email}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Empresa</f:facet>
+            #{item.empresa.nome}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Perfil</f:facet>
+            #{item.perfil}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Ações</f:facet>
+            <h:commandButton value="Editar" action="#{utilizadorBean.edit(item.id)}"/>
+            <h:commandButton value="Remover" action="#{utilizadorBean.delete(item.id)}"/>
+        </h:column>
+    </h:dataTable>
+</h:form>
+</h:body>
+</html>

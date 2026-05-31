@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Empresas - SmartGest</title>
+</h:head>
+<h:body>
+<h1>Gestão de Empresas</h1>
+<h:link outcome="/index.xhtml" value="Voltar ao início"/>
+<h:messages globalOnly="true"/>
+
+<h:form>
+    <h3>Cadastro</h3>
+    <h:panelGrid columns="2">
+        <h:outputLabel for="nif" value="NIF"/>
+        <h:inputText id="nif" value="#{empresaBean.empresa.nif}" required="true"/>
+
+        <h:outputLabel for="nome" value="Nome"/>
+        <h:inputText id="nome" value="#{empresaBean.empresa.nome}" required="true"/>
+
+        <h:outputLabel for="baseDados" value="Base de Dados"/>
+        <h:inputText id="baseDados" value="#{empresaBean.empresa.nomeBaseDados}"/>
+
+        <h:outputLabel for="idioma" value="Idioma"/>
+        <h:selectOneMenu id="idioma" value="#{empresaBean.idiomaCodigo}">
+            <f:selectItems value="#{empresaBean.idiomas}" var="idioma"
+                           itemValue="#{idioma.codigo}" itemLabel="#{idioma.nome}"/>
+        </h:selectOneMenu>
+
+        <h:outputLabel for="ativo" value="Ativo"/>
+        <h:selectBooleanCheckbox id="ativo" value="#{empresaBean.empresa.ativo}"/>
+    </h:panelGrid>
+
+    <h:commandButton value="Novo" action="#{empresaBean.prepareNew}"/>
+    <h:commandButton value="Guardar" action="#{empresaBean.save}"/>
+</h:form>
+
+<h:form>
+    <h3>Registos</h3>
+    <h:dataTable value="#{empresaBean.empresas}" var="item" border="1">
+        <h:column>
+            <f:facet name="header">NIF</f:facet>
+            #{item.nif}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Nome</f:facet>
+            #{item.nome}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Idioma</f:facet>
+            #{item.idioma.codigo}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Ações</f:facet>
+            <h:commandButton value="Editar" action="#{empresaBean.edit(item.nif)}"/>
+            <h:commandButton value="Remover" action="#{empresaBean.delete(item.nif)}"/>
+        </h:column>
+    </h:dataTable>
+</h:form>
+</h:body>
+</html>
