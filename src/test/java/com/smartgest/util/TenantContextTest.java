@@ -6,6 +6,20 @@ import org.junit.jupiter.api.Test;
 class TenantContextTest {
 
     @Test
+    void shouldStoreAndClearTenant() {
+        TenantContext.clear();
+        TenantContext.setTenantNif("500000001");
+
+        Assertions.assertEquals("500000001", TenantContext.getTenantNif());
+        Assertions.assertEquals("500000001", TenantContext.getTenantOrDefault());
+
+        TenantContext.clear();
+
+        Assertions.assertNull(TenantContext.getTenantNif());
+        Assertions.assertEquals("master", TenantContext.getTenantOrDefault());
+    }
+
+    @Test
     void shouldReturnDefaultTenantWhenEmpty() {
         TenantContext.clear();
         Assertions.assertEquals("master", TenantContext.getTenantOrDefault());
