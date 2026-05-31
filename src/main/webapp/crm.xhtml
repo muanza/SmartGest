@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>CRM - SmartGest</title>
+</h:head>
+<h:body>
+<h1>CRM Online</h1>
+<h:link outcome="/index.xhtml" value="Voltar ao início"/>
+
+<h3>Parceiros</h3>
+<h:dataTable value="#{crmBean.partners}" var="item" border="1">
+    <h:column>
+        <f:facet name="header">Nome</f:facet>
+        #{item.nome}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Email</f:facet>
+        #{item.email}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Tenants</f:facet>
+        #{item.totalTenants}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Estado</f:facet>
+        #{item.estado}
+    </h:column>
+</h:dataTable>
+
+<h3>Licenças</h3>
+<h:dataTable value="#{crmBean.licenses}" var="item" border="1">
+    <h:column>
+        <f:facet name="header">Tenant NIF</f:facet>
+        #{item.tenantNif}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Tipo</f:facet>
+        #{item.tipo}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Parceiro</f:facet>
+        #{item.parceiro}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Válida até</f:facet>
+        #{item.validaAte}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Activa</f:facet>
+        #{item.ativa ? 'Sim' : 'Não'}
+    </h:column>
+</h:dataTable>
+
+<h3>Portfólio do parceiro</h3>
+<h:form>
+    <h:selectOneMenu value="#{crmBean.selectedPartner}">
+        <f:selectItems value="#{crmBean.partners}" var="partner" itemValue="#{partner.nome}" itemLabel="#{partner.nome}"/>
+        <f:ajax render="portfolioTable"/>
+    </h:selectOneMenu>
+    <h:dataTable id="portfolioTable" value="#{crmBean.partnerPortfolio}" var="item" border="1">
+        <h:column>
+            <f:facet name="header">Tenant</f:facet>
+            #{item.tenantNif}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Tipo</f:facet>
+            #{item.tipo}
+        </h:column>
+        <h:column>
+            <f:facet name="header">Válida até</f:facet>
+            #{item.validaAte}
+        </h:column>
+    </h:dataTable>
+</h:form>
+
+<h3>Banners</h3>
+<h:dataTable value="#{crmBean.banners}" var="item" border="1">
+    <h:column>
+        <f:facet name="header">Título</f:facet>
+        #{item.titulo}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Mensagem</f:facet>
+        #{item.mensagem}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Público</f:facet>
+        #{item.publicoAlvo}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Activo</f:facet>
+        #{item.ativo ? 'Sim' : 'Não'}
+    </h:column>
+</h:dataTable>
+
+<h3>Comunicação em massa</h3>
+<h:dataTable value="#{crmBean.broadcasts}" var="item" border="1">
+    <h:column>
+        <f:facet name="header">Título</f:facet>
+        #{item.titulo}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Canal</f:facet>
+        #{item.canal}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Público</f:facet>
+        #{item.publico}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Enviado em</f:facet>
+        #{item.dataEnvio}
+    </h:column>
+</h:dataTable>
+
+<h3>Máquinas activas</h3>
+<h:dataTable value="#{crmBean.machines}" var="item" border="1">
+    <h:column>
+        <f:facet name="header">Tenant</f:facet>
+        #{item.tenantNif}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Host</f:facet>
+        #{item.hostname}
+    </h:column>
+    <h:column>
+        <f:facet name="header">IP</f:facet>
+        #{item.ip}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Heartbeat</f:facet>
+        #{item.ultimoHeartbeat}
+    </h:column>
+</h:dataTable>
+</h:body>
+</html>

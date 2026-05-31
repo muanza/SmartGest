@@ -7,17 +7,32 @@
     <persistence-unit name="smartgestPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
+        <class>com.smartgest.model.Idioma</class>
         <class>com.smartgest.model.Empresa</class>
+        <class>com.smartgest.model.Parceiro</class>
+        <class>com.smartgest.model.Licenca</class>
+        <class>com.smartgest.model.BannerPublicidade</class>
+        <class>com.smartgest.model.ComunicacaoMassa</class>
+        <class>com.smartgest.model.MaquinaLicenciada</class>
+        <class>com.smartgest.model.ConfiguracaoGlobal</class>
+        <class>com.smartgest.model.AuditoriaLicenciamento</class>
+
         <class>com.smartgest.model.Utilizador</class>
+        <class>com.smartgest.model.Categoria</class>
+        <class>com.smartgest.model.CategoriaProduto</class>
         <class>com.smartgest.model.Produto</class>
         <class>com.smartgest.model.Stock</class>
-        <class>com.smartgest.model.Venda</class>
+        <class>com.smartgest.model.MovimentoStock</class>
+        <class>com.smartgest.model.Caixa</class>
         <class>com.smartgest.model.MovimentoCaixa</class>
-        <class>com.smartgest.model.Fatura</class>
         <class>com.smartgest.model.Cliente</class>
-        <class>com.smartgest.model.Categoria</class>
-        <class>com.smartgest.model.Idioma</class>
+        <class>com.smartgest.model.Venda</class>
+        <class>com.smartgest.model.Fatura</class>
+        <class>com.smartgest.model.Facturacao</class>
+        <class>com.smartgest.model.LinhaFactura</class>
+        <class>com.smartgest.model.Pagamento</class>
         <class>com.smartgest.model.Configuracao</class>
+        <class>com.smartgest.model.PreferenciaSistema</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>POS - SmartGest</title>
+</h:head>
+<h:body>
+<h1>POS</h1>
+<h:link outcome="/index.xhtml" value="Voltar ao início"/>
+<h:messages globalOnly="true"/>
+
+<h:form>
+    <h3>Estado actual</h3>
+    <h:panelGrid columns="2">
+        <h:outputText value="Operador"/>
+        <h:outputText value="#{posBean.state.operador}"/>
+        <h:outputText value="Estado do caixa"/>
+        <h:outputText value="#{posBean.state.estadoCaixa}"/>
+        <h:outputText value="Valor de abertura"/>
+        <h:outputText value="#{posBean.state.valorAbertura}"/>
+        <h:outputText value="Valor em caixa"/>
+        <h:outputText value="#{posBean.state.valorEmCaixa}"/>
+        <h:outputText value="Ecrã bloqueado"/>
+        <h:outputText value="#{posBean.state.ecranBloqueado ? 'Sim' : 'Não'}"/>
+        <h:outputText value="Full screen"/>
+        <h:outputText value="#{posBean.state.ecranCompleto ? 'Sim' : 'Não'}"/>
+    </h:panelGrid>
+
+    <h:panelGrid columns="2">
+        <h:outputLabel for="movementValue" value="Valor"/>
+        <h:inputText id="movementValue" value="#{posBean.movementValue}" required="true"/>
+        <h:outputLabel for="movementType" value="Tipo"/>
+        <h:selectOneMenu id="movementType" value="#{posBean.movementType}">
+            <f:selectItem itemValue="ENTRADA" itemLabel="Entrada"/>
+            <f:selectItem itemValue="SAIDA" itemLabel="Saída"/>
+        </h:selectOneMenu>
+        <h:outputLabel for="movementDescription" value="Descrição"/>
+        <h:inputText id="movementDescription" value="#{posBean.movementDescription}" required="true"/>
+    </h:panelGrid>
+
+    <h:commandButton value="Abrir Caixa" action="#{posBean.openCash}"/>
+    <h:commandButton value="Fechar Caixa" action="#{posBean.closeCash}"/>
+    <h:commandButton value="Registar Movimento" action="#{posBean.registerMovement}"/>
+    <h:commandButton value="Bloquear Ecrã" action="#{posBean.toggleLock}"/>
+    <h:commandButton value="Alternar Full Screen" action="#{posBean.toggleFullscreen}"/>
+</h:form>
+
+<h3>Movimentos</h3>
+<h:dataTable value="#{posBean.movements}" var="item" border="1">
+    <h:column>
+        <f:facet name="header">Tipo</f:facet>
+        #{item.tipo}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Valor</f:facet>
+        #{item.valor}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Operador</f:facet>
+        #{item.operador}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Descrição</f:facet>
+        #{item.descricao}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Data</f:facet>
+        #{item.data}
+    </h:column>
+</h:dataTable>
+</h:body>
+</html>
