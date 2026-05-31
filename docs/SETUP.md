@@ -5,7 +5,7 @@
 - Java 11+
 - Maven 3.8+
 - PostgreSQL 12+
-- Tomcat 9+ (ou outro servlet container compatível com Java EE 8)
+- WildFly 26+ (recomendado para Java EE 8)
 
 ## 2) Configurar PostgreSQL
 
@@ -31,11 +31,11 @@ mvn clean package
 
 Resultado esperado: `target/smartgest-1.0.0-SNAPSHOT.war`
 
-## 4) Configurar servidor de aplicação (Tomcat)
+## 4) Configurar servidor de aplicação (WildFly)
 
-1. Copiar `target/smartgest-1.0.0-SNAPSHOT.war` para `${TOMCAT_HOME}/webapps/`
-2. Validar datasource JNDI em `src/main/webapp/META-INF/context.xml`
-3. Iniciar Tomcat
+1. Criar datasource `java:/jdbc/smartgest_master` no WildFly
+2. Fazer deploy de `target/smartgest-1.0.0-SNAPSHOT.war` no WildFly
+3. Iniciar o serviço e validar os logs de boot
 
 ## 5) Executar aplicação
 
@@ -84,7 +84,7 @@ curl -i https://crm.smartgest.local/api/health
 3. Aplicar `sql/03_tenant_schema.sql` em cada base tenant
 4. Ajustar `src/main/resources/application.properties` e `src/main/resources/database.properties`
 5. Gerar o WAR com `mvn clean package`
-6. Publicar o WAR no Tomcat
+6. Publicar o WAR no WildFly
 7. Validar a homepage, módulos JSF e endpoints `/api/crm/*`
 8. Configurar rotina do sistema operativo para copiar `app.backup.local-dir` para o destino local desejado
 9. Configurar o endpoint cloud indicado em `app.cloud.sync.endpoint`
