@@ -66,9 +66,12 @@ public class PosBean implements Serializable {
     }
 
     private void addMessage(String message) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        if (context != null) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, message));
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            if (context != null) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, message, message));
+            }
+        } catch (Throwable ignored) {
         }
     }
 
