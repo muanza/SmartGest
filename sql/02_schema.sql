@@ -1,82 +1,96 @@
+-- SmartGest master schema (CRM/licenciamento)
 \connect smartgest_master;
 
-CREATE TABLE IF NOT EXISTS idiomas (
+DROP TABLE IF EXISTS auditoria_licenciamento CASCADE;
+DROP TABLE IF EXISTS maquinas_licenciadas CASCADE;
+DROP TABLE IF EXISTS comunicacoes_massa CASCADE;
+DROP TABLE IF EXISTS banners_publicidade CASCADE;
+DROP TABLE IF EXISTS licencas CASCADE;
+DROP TABLE IF EXISTS configuracoes_globais CASCADE;
+DROP TABLE IF EXISTS empresas CASCADE;
+DROP TABLE IF EXISTS parceiros CASCADE;
+DROP TABLE IF EXISTS idiomas CASCADE;
+
+CREATE TABLE idiomas (
     codigo VARCHAR(10) PRIMARY KEY,
     nome VARCHAR(80) NOT NULL,
     ativo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE IF NOT EXISTS empresas (
+CREATE TABLE parceiros (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(200) NOT NULL,
+    nif VARCHAR(20) UNIQUE NOT NULL,
+    email VARCHAR(200),
+    telefone VARCHAR(50),
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    criado_em TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE empresas (
    nif VARCHAR(14) PRIMARY KEY,
    nome VARCHAR(150) NOT NULL,
    nome_base_dados VARCHAR(80) NOT NULL UNIQUE,
    codigo_idioma VARCHAR(10) NOT NULL REFERENCES idiomas(codigo),
-   parceiro_nome VARCHAR(150),
+   parceiro_nome VARCHAR(200),
    ativo BOOLEAN NOT NULL DEFAULT TRUE,
    criado_em TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS parceiros (
-   id BIGSERIAL PRIMARY KEY,
-   nome VARCHAR(150) NOT NULL UNIQUE,
-   nif VARCHAR(14),
-   email VARCHAR(120) NOT NULL,
-   activo BOOLEAN NOT NULL DEFAULT TRUE,
-   criado_em TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS licencas (
+CREATE TABLE licencas (
    id BIGSERIAL PRIMARY KEY,
    empresa_nif VARCHAR(14) NOT NULL REFERENCES empresas(nif),
-   chave VARCHAR(80) NOT NULL,
-   tipo VARCHAR(30) NOT NULL,
-   data_inicio DATE NOT NULL,
-   data_fim DATE NOT NULL,
-   limite_faturas_dia INTEGER NOT NULL DEFAULT 1000,
-   activa BOOLEAN NOT NULL DEFAULT TRUE,
-   token_activacao VARCHAR(120),
+   chave_licenca VARCHAR(120) UNIQUE NOT NULL,
+   estado VARCHAR(30) NOT NULL,
+   limite_maquinas INTEGER NOT NULL DEFAULT 1,
+   validade DATE NOT NULL,
+   criada_em TIMESTAMP NOT NULL DEFAULT NOW(),
+   atualizada_em TIMESTAMP
+);
+
+CREATE TABLE banners_publicidade (
+   id BIGSERIAL PRIMARY KEY,
+   titulo VARCHAR(200) NOT NULL,
+   imagem_url VARCHAR(500),
+   link_url VARCHAR(500),
+   ativo BOOLEAN NOT NULL DEFAULT TRUE,
+   inicio_exibicao TIMESTAMP,
+   fim_exibicao TIMESTAMP,
    criado_em TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS banners_publicidade (
+CREATE TABLE comunicacoes_massa (
    id BIGSERIAL PRIMARY KEY,
-   titulo VARCHAR(150) NOT NULL,
-   mensagem VARCHAR(255) NOT NULL,
-   publico_alvo VARCHAR(120) NOT NULL,
-   activo BOOLEAN NOT NULL DEFAULT TRUE,
-   criado_em TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS comunicacoes_massa (
-   id BIGSERIAL PRIMARY KEY,
-   titulo VARCHAR(150) NOT NULL,
+   assunto VARCHAR(200) NOT NULL,
    mensagem TEXT NOT NULL,
    canal VARCHAR(50) NOT NULL,
-   publico_alvo VARCHAR(120) NOT NULL,
-   enviada_em TIMESTAMP NOT NULL DEFAULT NOW()
+   programada_para TIMESTAMP,
+   enviada_em TIMESTAMP,
+   criado_em TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS maquinas_licenciadas (
+CREATE TABLE maquinas_licenciadas (
    id BIGSERIAL PRIMARY KEY,
-   empresa_nif VARCHAR(14) NOT NULL REFERENCES empresas(nif),
-   hostname VARCHAR(100) NOT NULL,
-   endereco_ip VARCHAR(50) NOT NULL,
-   fingerprint_hardware VARCHAR(120),
-   activa BOOLEAN NOT NULL DEFAULT TRUE,
-   ultimo_heartbeat TIMESTAMP NOT NULL DEFAULT NOW()
+   licenca_id BIGINT NOT NULL REFERENCES licencas(id) ON DELETE CASCADE,
+   identificador_maquina VARCHAR(200) NOT NULL,
+   descricao VARCHAR(200),
+   ativa BOOLEAN NOT NULL DEFAULT TRUE,
+   ultimo_heartbeat TIMESTAMP,
+   criada_em TIMESTAMP NOT NULL DEFAULT NOW(),
+   UNIQUE (licenca_id, identificador_maquina)
 );
 
-CREATE TABLE IF NOT EXISTS configuracoes_globais (
+CREATE TABLE configuracoes_globais (
    id BIGSERIAL PRIMARY KEY,
-   chave VARCHAR(80) NOT NULL UNIQUE,
-   valor VARCHAR(255) NOT NULL
+   chave VARCHAR(100) UNIQUE NOT NULL,
+   valor VARCHAR(500)
 );
 
-CREATE TABLE IF NOT EXISTS auditoria_licenciamento (
+CREATE TABLE auditoria_licenciamento (
    id BIGSERIAL PRIMARY KEY,
-   empresa_nif VARCHAR(14) REFERENCES empresas(nif),
-   evento VARCHAR(80) NOT NULL,
-   detalhes VARCHAR(255),
+   licenca_id BIGINT REFERENCES licencas(id) ON DELETE SET NULL,
+   evento VARCHAR(100) NOT NULL,
+   detalhe TEXT,
    criado_em TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
@@ -84,26 +98,28 @@ INSERT INTO idiomas (codigo, nome) VALUES
 ('pt', 'Português'),
 ('en', 'English'),
 ('fr', 'Français'),
-('zh', '中文')
-ON CONFLICT (codigo) DO NOTHING;
+('zh', '中文');
 
-INSERT INTO parceiros (nome, nif, email, activo) VALUES
-('Parceiro Luanda Norte', '500100001', 'luanda.norte@smartgest.local', TRUE),
-('Parceiro Benguela Sul', '500100002', 'benguela.sul@smartgest.local', TRUE)
-ON CONFLICT (nome) DO NOTHING;
+INSERT INTO parceiros (nome, nif, email, telefone, ativo) VALUES
+('Parceiro Demo', '500100100', 'parceiro@smartgest.test', '+351900000001', TRUE);
 
 INSERT INTO empresas (nif, nome, nome_base_dados, codigo_idioma, parceiro_nome, ativo) VALUES
-('500000001', 'Empresa Exemplo', 'smartgest_tenant_500000001', 'pt', 'Parceiro Luanda Norte', TRUE)
-ON CONFLICT (nif) DO NOTHING;
+('500000001', 'Empresa Exemplo', 'smartgest_tenant_500000001', 'pt', 'Parceiro Demo', TRUE);
 
-INSERT INTO licencas (empresa_nif, chave, tipo, data_inicio, data_fim, limite_faturas_dia, activa, token_activacao) VALUES
-('500000001', 'LIC-500000001-PRO', 'PRO', CURRENT_DATE, CURRENT_DATE + INTERVAL '365 days', 1000, TRUE, 'TOKEN-CRM-500000001')
-ON CONFLICT DO NOTHING;
+INSERT INTO licencas (empresa_nif, chave_licenca, estado, limite_maquinas, validade)
+VALUES ('500000001', 'LIC-500000001-AAAA-BBBB', 'ATIVA', 3, CURRENT_DATE + INTERVAL '365 days');
 
-INSERT INTO banners_publicidade (titulo, mensagem, publico_alvo, activo) VALUES
-('Campanha Junho', 'Renovação anual com condições especiais.', 'Todos os tenants', TRUE)
-ON CONFLICT DO NOTHING;
+INSERT INTO banners_publicidade (titulo, imagem_url, link_url, ativo)
+VALUES ('Promo SmartGest', 'https://cdn.smartgest.test/banner1.png', 'https://smartgest.test/promo', TRUE);
 
-INSERT INTO comunicacoes_massa (titulo, mensagem, canal, publico_alvo) VALUES
-('Boas práticas de backup', 'Valide backups incrementais e sincronização cloud diariamente.', 'EMAIL', 'Administradores')
-ON CONFLICT DO NOTHING;
+INSERT INTO comunicacoes_massa (assunto, mensagem, canal)
+VALUES ('Bem-vindo ao SmartGest', 'Configuração inicial concluída com sucesso.', 'EMAIL');
+
+INSERT INTO maquinas_licenciadas (licenca_id, identificador_maquina, descricao)
+VALUES (1, 'MACHINE-001', 'Posto principal');
+
+INSERT INTO configuracoes_globais (chave, valor)
+VALUES ('agt.modo', 'producao');
+
+INSERT INTO auditoria_licenciamento (licenca_id, evento, detalhe)
+VALUES (1, 'ATIVACAO', 'Licença inicial ativada para tenant 500000001');

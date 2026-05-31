@@ -57,6 +57,7 @@ SmartGest/
 - JAX-RS 2.1
 - PostgreSQL
 - Maven
+- WildFly (deployable WAR)
 
 ## Build rápido
 
@@ -70,6 +71,11 @@ mvn clean package
 - `GET /api/crm/health`
 - `GET /api/crm/licencas/{tenantNif}`
 - `GET /api/crm/banners`
+
+
+SQL pronto com DROP/CREATE:
+- Master: `idiomas`, `empresas`, `parceiros`, `licencas`, `banners_publicidade`, `comunicacoes_massa`, `maquinas_licenciadas`, `configuracoes_globais`, `auditoria_licenciamento`
+- Tenant: `utilizadores`, `categorias_produto`, `produtos`, `movimentos_stock`, `caixas`, `facturacoes`, `linhas_factura`, `pagamentos`, `movimentos_caixa`, `preferencias_sistema`
 
 ## Setup detalhado
 
