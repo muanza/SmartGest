@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Operações - SmartGest</title>
+</h:head>
+<h:body>
+<h1>Operações, Compliance e Backup</h1>
+<h:link outcome="/index.xhtml" value="Voltar ao início"/>
+
+<h3>Plano de backup</h3>
+<h:panelGrid columns="2">
+    <h:outputText value="Frequência"/>
+    <h:outputText value="#{operacoesBean.backupPlan.frequencia}"/>
+    <h:outputText value="Destino local"/>
+    <h:outputText value="#{operacoesBean.backupPlan.destinoLocal}"/>
+    <h:outputText value="Sincronização cloud"/>
+    <h:outputText value="#{operacoesBean.backupPlan.sincronizacaoCloud}"/>
+    <h:outputText value="Retenção"/>
+    <h:outputText value="#{operacoesBean.backupPlan.retencao}"/>
+</h:panelGrid>
+
+<h3>Checklist operacional</h3>
+<h:dataTable value="#{operacoesBean.checklist}" var="item" border="1">
+    <h:column>
+        <f:facet name="header">Tema</f:facet>
+        #{item.titulo}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Descrição</f:facet>
+        #{item.descricao}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Estado</f:facet>
+        #{item.estado}
+    </h:column>
+</h:dataTable>
+</h:body>
+</html>

@@ -1,15 +1,67 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
     <title>SmartGest</title>
 </h:head>
 <h:body>
 <h2>#{homeBean.message}</h2>
+<p>Endpoint CRM health: #{homeBean.crmHealthEndpoint}</p>
+
+<h3>Facturação</h3>
+<h:dataTable value="#{homeBean.billingModules}" var="module" border="1">
+    <h:column>
+        <f:facet name="header">Módulo</f:facet>
+        <h:link outcome="#{module.rota}" value="#{module.nome}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Descrição</f:facet>
+        #{module.descricao}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Estado</f:facet>
+        #{module.estado}
+    </h:column>
+</h:dataTable>
+
+<h3>CRM</h3>
+<h:dataTable value="#{homeBean.crmModules}" var="module" border="1">
+    <h:column>
+        <f:facet name="header">Módulo</f:facet>
+        <h:link outcome="#{module.rota}" value="#{module.nome}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Descrição</f:facet>
+        #{module.descricao}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Estado</f:facet>
+        #{module.estado}
+    </h:column>
+</h:dataTable>
+
+<h3>Arquitectura alvo</h3>
 <ul>
-    <li><h:link outcome="/empresas.xhtml" value="CRUD de Empresas"/></li>
-    <li><h:link outcome="/produtos.xhtml" value="CRUD de Produtos"/></li>
-    <li><h:link outcome="/utilizadores.xhtml" value="CRUD de Utilizadores"/></li>
+    <ui:repeat xmlns:ui="http://xmlns.jcp.org/jsf/facelets" value="#{homeBean.architectureHighlights}" var="item">
+        <li>#{item}</li>
+    </ui:repeat>
 </ul>
+
+<h3>Checklist AGT / operações</h3>
+<h:dataTable value="#{homeBean.complianceItems}" var="item" border="1">
+    <h:column>
+        <f:facet name="header">Tema</f:facet>
+        #{item.titulo}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Descrição</f:facet>
+        #{item.descricao}
+    </h:column>
+    <h:column>
+        <f:facet name="header">Estado</f:facet>
+        #{item.estado}
+    </h:column>
+</h:dataTable>
 </h:body>
 </html>
